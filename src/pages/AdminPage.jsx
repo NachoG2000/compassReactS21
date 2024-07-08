@@ -1,11 +1,32 @@
 import React from "react"
+import axios from "axios"
 
 import { Link, NavLink, Outlet } from "react-router-dom"
 
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import useAuth from "../auth/useAuth"
 
 export default function AdminPage() {
+  const { auth, setAuth } = useAuth()
+
+  const handleLogOut = async (e) => {
+    // e.preventDefault();
+
+    try {
+        const response = axios.post('http://localhost:8080/api/logout', {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        setAuth({});
+        console.log(auth)
+    } catch (error) {
+        console.error('Logout failed', error);
+        // Handle login error (e.g., show error message to user)
+    }
+  } 
+
   return (
     <div className="flex h-screen w-full">
       <div className="bg-[#016654] text-white w-64">
@@ -93,12 +114,8 @@ export default function AdminPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-white">
-                <DropdownMenuLabel>John Doe</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Logout</DropdownMenuItem>
+                <DropdownMenuLabel>{auth.email}</DropdownMenuLabel>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => handleLogOut()}>Logout</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -110,26 +127,6 @@ export default function AdminPage() {
     </div>
   )
 }
-
-function ActivityIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
-    </svg>
-  )
-}
-
 
 function BookIcon(props) {
   return (
@@ -149,28 +146,6 @@ function BookIcon(props) {
     </svg>
   )
 }
-
-
-function ClipboardIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-    </svg>
-  )
-}
-
 
 function FileIcon(props) {
   return (
@@ -192,29 +167,6 @@ function FileIcon(props) {
   )
 }
 
-
-function GraduationCapIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
-      <path d="M22 10v6" />
-      <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
-    </svg>
-  )
-}
-
-
 function HomeIcon(props) {
   return (
     <svg
@@ -231,27 +183,6 @@ function HomeIcon(props) {
     >
       <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  )
-}
-
-
-function LockIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
     </svg>
   )
 }

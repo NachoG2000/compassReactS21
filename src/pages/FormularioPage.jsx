@@ -7,7 +7,7 @@ import PreguntasComponent from '../myComponents/PreguntasComponent';
 
 const FormularioPage = () => {
   const universityId = 1;
-  
+
   const [step, setStep] = useState(0);
   const [results, setResults] = useState(null);
   const [userData, setUserData] = useState('');
@@ -38,16 +38,16 @@ const FormularioPage = () => {
 
   return (
     <>
-      {step === 0 && 
+      {step === 0 &&
         <PreguntasComponent nextSection={nextSection} setSurveyData={setSurveyData} universityId={universityId} />
       }
-      {step === 1 && 
+      {step === 1 &&
         <UserDataComponent nextSection={nextSection} setUserData={setUserData} universityId={universityId} />
       }
       {step === 2 && (
-        results ? 
-          <ResultsComponent results={results} /> 
-          : <h1>Cargando resultados...</h1>
+        results ?
+          <ResultsComponent results={results} />
+          : <Spinner />
       )}
     </>
   );
@@ -55,5 +55,16 @@ const FormularioPage = () => {
 
 export default FormularioPage;
 
+export const Spinner = () => {
+  return (
+    <div
+      className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+      role="status">
+      <span
+        className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+      >Loading...</span>
+    </div>
+  )
+}
 
 

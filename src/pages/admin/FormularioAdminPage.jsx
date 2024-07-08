@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
+import useAxiosPrivate from '../../auth/useAxiosPrivate';
 
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -25,11 +25,12 @@ const FormularioAdminPage = () => {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [preguntaToEdit, setPreguntaToEdit] = useState(null);
   const [preguntaToDelete, setPreguntaToDelete] = useState(null);
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/preguntas/${universidadId}`);
+        const response = await axiosPrivate.get(`http://localhost:8080/api/v1/preguntas/${universidadId}`);
         setPreguntas(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -46,7 +47,7 @@ const FormularioAdminPage = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8080/api/v1/createPregunta/${universidadId}`, {
+      const response = await axiosPrivate.post(`http://localhost:8080/api/v1/createPregunta/${universidadId}`, {
         texto_pregunta: textoPregunta
       });
       setPreguntas([...preguntas, {
@@ -63,7 +64,7 @@ const FormularioAdminPage = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8080/api/v1/updatePregunta/${preguntaToEdit.id_pregunta}`, {
+      await axiosPrivate.put(`http://localhost:8080/api/v1/updatePregunta/${preguntaToEdit.id_pregunta}`, {
         texto_pregunta: preguntaToEdit.texto_pregunta
       });
       setPreguntas(preguntas.map(pregunta => (pregunta.id_pregunta === preguntaToEdit.id_pregunta ? preguntaToEdit : pregunta)));
@@ -75,7 +76,7 @@ const FormularioAdminPage = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/deletePregunta/${preguntaToDelete.id_pregunta}`);
+      await axiosPrivate.delete(`http://localhost:8080/api/v1/deletePregunta/${preguntaToDelete.id_pregunta}`);
       setPreguntas(preguntas.filter(pregunta => pregunta.id_pregunta !== preguntaToDelete.id_pregunta));
       setIsAlertDialogOpen(false);
     } catch (error) {

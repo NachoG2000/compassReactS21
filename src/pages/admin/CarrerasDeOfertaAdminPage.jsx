@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios'
+import useAxiosPrivate from '../../auth/useAxiosPrivate';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -30,11 +30,12 @@ const CarrerasDeOfertaAdminPage = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [carreraToDelete, setCarreraToDelete] = useState(null);
   const [carreraToEdit, setCarreraToEdit] = useState(null);
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/carreras/oferta/${params.id}`);
+        const response = await axiosPrivate.get(`http://localhost:8080/carreras/oferta/${params.id}`);
         setCarreras(response.data);
       } catch (error) {
         if (error.response && error.response.status === 404) {
@@ -51,7 +52,7 @@ const CarrerasDeOfertaAdminPage = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8080/carreras/oferta/${params.id}`, {
+      const response = await axiosPrivate.post(`http://localhost:8080/carreras/oferta/${params.id}`, {
         nombre_carrera: nombreCarrera,
         descripcion_carrera: descripcionCarrera,
         duracion_carrera: duracionCarrera,
@@ -76,7 +77,7 @@ const CarrerasDeOfertaAdminPage = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/carreras/${carreraToDelete.id_carrera}`);
+      await axiosPrivate.delete(`http://localhost:8080/carreras/${carreraToDelete.id_carrera}`);
       setCarreras(carreras.filter(carrera => carrera.id_carrera !== carreraToDelete.id_carrera));
       setIsAlertDialogOpen(false);  // Close the alert dialog after successful deletion
     } catch (error) {
@@ -87,7 +88,7 @@ const CarrerasDeOfertaAdminPage = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8080/carreras/${carreraToEdit.id_carrera}`, {
+      await axiosPrivate.put(`http://localhost:8080/carreras/${carreraToEdit.id_carrera}`, {
         nombre_carrera: carreraToEdit.nombre_carrera,
         descripcion_carrera: carreraToEdit.descripcion_carrera,
         duracion_carrera: carreraToEdit.duracion_carrera,

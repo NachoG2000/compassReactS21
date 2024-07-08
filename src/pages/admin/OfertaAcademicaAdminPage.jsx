@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
+import useAxiosPrivate from '../../auth/useAxiosPrivate';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -26,11 +26,13 @@ const OfertaAcademicaAdminPage = (props) => {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [ofertaToEdit, setOfertaToEdit] = useState(null);
   const [ofertaToDelete, setOfertaToDelete] = useState(null);
+  const axiosPrivate = useAxiosPrivate();
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/ofertas/universidad/${universidadId}`);
+        const response = await axiosPrivate.get(`http://localhost:8080/ofertas/universidad/${universidadId}`);
         setOfertas(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -47,7 +49,7 @@ const OfertaAcademicaAdminPage = (props) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8080/ofertas/universidad/${universidadId}`, {
+      const response = await axiosPrivate.post(`http://localhost:8080/ofertas/create/universidad/${universidadId}`, {
         tipo_oferta: tipoOferta
       });
       setOfertas([...ofertas, {
@@ -64,7 +66,7 @@ const OfertaAcademicaAdminPage = (props) => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8080/ofertas/${ofertaToEdit.idOfertaAcademica}`, {
+      await axiosPrivate.put(`http://localhost:8080/ofertas/${ofertaToEdit.idOfertaAcademica}`, {
         tipo_oferta: ofertaToEdit.tipoOferta
       });
       setOfertas(ofertas.map(oferta => (oferta.idOfertaAcademica === ofertaToEdit.idOfertaAcademica ? ofertaToEdit : oferta)));
@@ -76,7 +78,7 @@ const OfertaAcademicaAdminPage = (props) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/ofertas/${ofertaToDelete.idOfertaAcademica}`);
+      await axiosPrivate.delete(`http://localhost:8080/ofertas/${ofertaToDelete.idOfertaAcademica}`);
       setOfertas(ofertas.filter(oferta => oferta.idOfertaAcademica !== ofertaToDelete.idOfertaAcademica));
       setIsAlertDialogOpen(false);
     } catch (error) {

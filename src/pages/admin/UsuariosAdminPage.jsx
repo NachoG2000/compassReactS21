@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
@@ -19,6 +18,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import useAxiosPrivate from '../../auth/useAxiosPrivate';
 
 const UsuariosAdminPage = () => {
   const universidadId = 1;
@@ -26,11 +26,12 @@ const UsuariosAdminPage = () => {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [usuarioToDelete, setUsuarioToDelete] = useState(null);
   const [carrerasSeleccionadas, setCarrerasSeleccionadas] = useState([]);
+  const axiosPrivate = useAxiosPrivate()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/usuarios/universidad/${universidadId}`);
+        const response = await axiosPrivate.get(`http://localhost:8080/usuarios/universidad/${universidadId}`);
         setUsuarios(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -43,7 +44,7 @@ const UsuariosAdminPage = () => {
   const getCarrerasSeleccionadas = async (idUsuario) => {
     event.preventDefault();
     try {
-      const response = await axios.get(`http://localhost:8080/carreras/usuario/${idUsuario}`);
+      const response = await axiosPrivate.get(`http://localhost:8080/carreras/usuario/${idUsuario}`);
       console.log(response.data);
       setCarrerasSeleccionadas(response.data);
     } catch (error) {
@@ -58,7 +59,7 @@ const UsuariosAdminPage = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/usuarios/${usuarioToDelete.idUsuario}`);
+      await axiosPrivate.delete(`http://localhost:8080/usuarios/${usuarioToDelete.idUsuario}`);
       setUsuarios(usuarios.filter(usuario => usuario.idUsuario !== usuarioToDelete.idUsuario));
       setIsAlertDialogOpen(false);
     } catch (error) {
